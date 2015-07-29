@@ -22,6 +22,9 @@ import org.eclipse.m2m.atl.emftvm.trace.TraceLink;
 import org.eclipse.m2m.atl.emftvm.trace.TraceLinkSet;
 import org.eclipse.m2m.atl.emftvm.trace.TracedRule;
 
+import uk.ac.york.mondo.integration.hawk.emf.HawkResourceFactoryImpl;
+import uk.ac.york.mondo.integration.hawk.emf.HawkResourceImpl;
+
 
 public class ATLMRUtils {
 
@@ -60,6 +63,21 @@ public class ATLMRUtils {
 				};
 			}
 		});
+
+		final HawkResourceFactoryImpl hawkFactory = new HawkResourceFactoryImpl() {
+			@Override
+			public Resource createResource(URI uri) {
+				return new HawkResourceImpl(uri) {
+					@Override
+					protected URIConverter getURIConverter() {
+						return new HadoopURIConverterImpl(conf);
+					}
+				};
+			}
+		};
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("hawkmodel", hawkFactory);
+		Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put("hawk+http", hawkFactory);
+		Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put("hawk+https", hawkFactory);
 
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("bin", new ResourceFactoryImpl() {
 			@Override

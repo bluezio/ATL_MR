@@ -12,8 +12,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import jline.Terminal;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -31,6 +29,8 @@ import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import fr.inria.atlanmod.atl_mr.utils.ATLMRUtils;
+import jline.Terminal;
+import uk.ac.york.mondo.integration.hawk.emf.HawkResourceFactoryImpl;
 
 public class RecordBuilder  {
 
@@ -77,7 +77,8 @@ public class RecordBuilder  {
 					// Initialize ExtensionToFactoryMap
 					Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", new EcoreResourceFactoryImpl());
 					Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
-
+					Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("hawkmodel", new HawkResourceFactoryImpl());
+					Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put("hawk+http", new HawkResourceFactoryImpl());
 
 					// Build records file
 					Builder recordBuilder = new Builder(URI.createURI(inputLocation), Arrays.asList(URI.createURI(sourcemmLocation)));

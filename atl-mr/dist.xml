@@ -23,7 +23,8 @@
 	</target>
 
 	<target name="dist.emftvm" depends="check.emftvm" unless="${emftvm.exists}">
-		<pde.exportPlugins destination="${dist.libs.atlmr}" exportSource="false" exportType="directory" plugins="org.eclipse.m2m.atl.emftvm,org.eclipse.m2m.atl.emftvm.trace" useJARFormat="true" qualifier="atlmr" />
+		<!-- allowbinarycycles="true" is needed due to a cycle between org.slf4j.api and ch.qos.logback.classic through ch.qos.logback.slf4j -->
+		<pde.exportPlugins allowbinarycycles="true" destination="${dist.libs.atlmr}" exportSource="false" exportType="directory" plugins="org.eclipse.m2m.atl.emftvm,org.eclipse.m2m.atl.emftvm.trace,uk.ac.york.mondo.integration.hawk.emf,uk.ac.york.mondo.integration.api" useJARFormat="true" qualifier="atlmr" />
 	</target>
 
 	<target name="dist">
@@ -156,6 +157,12 @@ case $key in
     ;;
     -i | --input)
     INPUT="$1"
+    if [ -r "$INPUT" ]; then
+      RECORDS=$INPUT.rec
+    else
+      RECORDS=records.rec
+      ISURL=yes
+    fi
     shift
     ;;
     *)
@@ -163,7 +170,6 @@ case $key in
 esac
 done
 			
-RECORDS=$INPUT.rec
 
 java -cp ${ant.project.name}.jar:$JARS fr.inria.atlanmod.atl_mr.builder.RecordBuilder -s $SOURCEMM -i $INPUT -o $RECORDS
 
@@ -172,10 +178,16 @@ URIRECORDS=/user/$USER/$RECORDS
 hdfs dfs -mkdir -p /user/$USER/`dirname $RECORDS`
 hdfs dfs -copyFromLocal -f $RECORDS $URIRECORDS
 
-MAPPERS=`yarn node -list | grep -c -E '^\s+\w+:[0-9]+\s+RUNNING\s+'`
+MAPPERS=`yarn node -list | grep -c -E '^\s*\w+:[0-9]+\s*RUNNING\s*'`
 
-yarn jar atl-mr.jar -libjars "$LIBJARS" -files "$SOURCEMM#$SOURCEMM,$TARGETMM#$TARGETMM,$TRANSFORMATION#$TRANSFORMATION,$INPUT#$INPUT" $YARNARGS -r $URIRECORDS -m $MAPPERS
-		</echo>
+if [ -z "$ISURL" ]; then
+    FILES="$SOURCEMM#$SOURCEMM,$TARGETMM#$TARGETMM,$TRANSFORMATION#$TRANSFORMATION,$INPUT#$INPUT"
+else
+    FILES="$SOURCEMM#$SOURCEMM,$TARGETMM#$TARGETMM,$TRANSFORMATION#$TRANSFORMATION"
+fi
+
+yarn jar atl-mr.jar -libjars "$LIBJARS" -files "$FILES" $YARNARGS -r $URIRECORDS -m $MAPPERS
+</echo>
 	</target>
 
 
