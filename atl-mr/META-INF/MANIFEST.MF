@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.m2m.atl.emftvm,
  uk.ac.york.mondo.integration.api,
  uk.ac.york.mondo.integration.hawk.emf,
  org.apache.thrift;bundle-version="0.9.2",
- org.slf4j.api;bundle-version="1.7.2"
+ org.slf4j.api;bundle-version="1.7.2",
+ uk.ac.york.mondo.integration.artemis;bundle-version="1.0.0"
 Bundle-Version: 0.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ManifestVersion: 2

@@ -15,8 +15,8 @@
 	<property name="dist.libs.atlmr" location="${dist.libs}/atlmr" />
 	<property name="run.sh" value="${dist}/run.sh" />
 	<property name="run.bat" value="${dist}/run.bat" />
-
 	<property name="jar.file" location="${dist}/${ant.project.name}.jar" />
+	<property name="native-package-type" value="jar" />
 
 	<target name="check.emftvm" unless="emftvm.exists">
 		<available property="emftvm.exists" file="${dist.libs.atlmr}/plugins/org.eclipse.m2m.atl.emftvm_3.5.0.atlmr.jar" />
@@ -24,7 +24,7 @@
 
 	<target name="dist.emftvm" depends="check.emftvm" unless="${emftvm.exists}">
 		<!-- allowbinarycycles="true" is needed due to a cycle between org.slf4j.api and ch.qos.logback.classic through ch.qos.logback.slf4j -->
-		<pde.exportPlugins allowbinarycycles="true" destination="${dist.libs.atlmr}" exportSource="false" exportType="directory" plugins="org.eclipse.m2m.atl.emftvm,org.eclipse.m2m.atl.emftvm.trace,uk.ac.york.mondo.integration.hawk.emf,uk.ac.york.mondo.integration.api" useJARFormat="true" qualifier="atlmr" />
+		<pde.exportPlugins allowbinarycycles="true" destination="${dist.libs.atlmr}" exportSource="false" exportType="directory" plugins="org.eclipse.m2m.atl.emftvm,org.eclipse.m2m.atl.emftvm.trace,uk.ac.york.mondo.integration.hawk.emf,uk.ac.york.mondo.integration.api,uk.ac.york.mondo.integration.artemis" useJARFormat="true" qualifier="atlmr" />
 	</target>
 
 	<target name="dist">
