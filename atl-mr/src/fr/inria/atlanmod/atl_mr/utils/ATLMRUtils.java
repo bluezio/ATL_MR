@@ -22,11 +22,49 @@ import org.eclipse.m2m.atl.emftvm.trace.TraceLink;
 import org.eclipse.m2m.atl.emftvm.trace.TraceLinkSet;
 import org.eclipse.m2m.atl.emftvm.trace.TracedRule;
 
+import uk.ac.york.mondo.integration.hawk.emf.HawkModelDescriptor;
 import uk.ac.york.mondo.integration.hawk.emf.HawkResourceFactoryImpl;
 import uk.ac.york.mondo.integration.hawk.emf.HawkResourceImpl;
 
 
 public class ATLMRUtils {
+
+	private static final class HadoopHawkResourceFactoryImpl extends HawkResourceFactoryImpl {
+		private final Configuration conf;
+
+		private HadoopHawkResourceFactoryImpl(Configuration conf) {
+			this.conf = conf;
+		}
+
+		@Override
+		public Resource createResource(URI uri) {
+			if (isHawkURL(uri)) {
+				final HawkModelDescriptor descriptor = parseHawkURL(uri);
+				return new HadoopHawkResourceImpl(uri, descriptor, conf);
+			} else {
+				return new HadoopHawkResourceImpl(uri, conf);
+			}
+		}
+	}
+
+	private static final class HadoopHawkResourceImpl extends HawkResourceImpl {
+		private final Configuration conf;
+
+		private HadoopHawkResourceImpl(URI uri, HawkModelDescriptor descriptor, Configuration conf) {
+			super(uri, descriptor);
+			this.conf = conf;
+		}
+
+		public HadoopHawkResourceImpl(URI uri, Configuration conf) {
+			super(uri);
+			this.conf = conf;
+		}
+
+		@Override
+		protected URIConverter getURIConverter() {
+			return new HadoopURIConverterImpl(conf);
+		}
+	}
 
 	public static void configureRegistry(final Configuration conf) {
 		// Initialize ExtensionToFactoryMap
@@ -64,17 +102,7 @@ public class ATLMRUtils {
 			}
 		});
 
-		final HawkResourceFactoryImpl hawkFactory = new HawkResourceFactoryImpl() {
-			@Override
-			public Resource createResource(URI uri) {
-				return new HawkResourceImpl(uri) {
-					@Override
-					protected URIConverter getURIConverter() {
-						return new HadoopURIConverterImpl(conf);
-					}
-				};
-			}
-		};
+		final HawkResourceFactoryImpl hawkFactory = new HadoopHawkResourceFactoryImpl(conf);
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("hawkmodel", hawkFactory);
 		Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put("hawk+http", hawkFactory);
 		Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put("hawk+https", hawkFactory);

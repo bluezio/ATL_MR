@@ -56,7 +56,9 @@
 
 		<pathconvert property="libsjars.atlmr" pathsep="," dirsep="/">
 			<map from="${dist.libs.atlmr}/plugins" to="libs/atlmr/plugins" />
+			<map from="${dist.libs.ivy}/default" to="libs/ivy/default" />
 			<fileset dir="${dist.libs.atlmr}/plugins" />
+			<fileset dir="${dist.libs.ivy}/default" includes="artemis*.jar,cglib*.jar" excludes="*-javadoc-*,*-source*"/>
 		</pathconvert>
 		
 		<antcall target="create.bat" />
