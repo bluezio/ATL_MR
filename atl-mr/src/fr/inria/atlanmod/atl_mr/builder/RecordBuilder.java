@@ -30,7 +30,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import fr.inria.atlanmod.atl_mr.utils.ATLMRUtils;
 import jline.Terminal;
-import uk.ac.york.mondo.integration.hawk.emf.HawkResourceFactoryImpl;
+import uk.ac.york.mondo.integration.hawk.emf.impl.HawkResourceFactoryImpl;
 
 public class RecordBuilder  {
 

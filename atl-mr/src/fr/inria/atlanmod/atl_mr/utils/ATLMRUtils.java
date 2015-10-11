@@ -23,8 +23,8 @@ import org.eclipse.m2m.atl.emftvm.trace.TraceLinkSet;
 import org.eclipse.m2m.atl.emftvm.trace.TracedRule;
 
 import uk.ac.york.mondo.integration.hawk.emf.HawkModelDescriptor;
-import uk.ac.york.mondo.integration.hawk.emf.HawkResourceFactoryImpl;
-import uk.ac.york.mondo.integration.hawk.emf.HawkResourceImpl;
+import uk.ac.york.mondo.integration.hawk.emf.impl.HawkResourceFactoryImpl;
+import uk.ac.york.mondo.integration.hawk.emf.impl.HawkResourceImpl;
 
 
 public class ATLMRUtils {
