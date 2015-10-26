@@ -27,12 +27,16 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import fr.inria.atlanmod.atl_mr.utils.ATLMRUtils;
 import jline.Terminal;
-import uk.ac.york.mondo.integration.hawk.emf.HawkResourceFactoryImpl;
+import uk.ac.york.mondo.integration.hawk.emf.impl.UnsplitHawkResourceFactoryImpl;
 
 public class RecordBuilder  {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(RecordBuilder.class);
 
 	static final String SOURCE_METAMODEL 					= "s";
 	static final String INPUT_MODEL 						= "i";
@@ -77,8 +81,8 @@ public class RecordBuilder  {
 					// Initialize ExtensionToFactoryMap
 					Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", new EcoreResourceFactoryImpl());
 					Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
-					Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("hawkmodel", new HawkResourceFactoryImpl());
-					Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put("hawk+http", new HawkResourceFactoryImpl());
+					Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("hawkmodel", new UnsplitHawkResourceFactoryImpl());
+					Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put("hawk+http", new UnsplitHawkResourceFactoryImpl());
 
 					// Build records file
 					Builder recordBuilder = new Builder(URI.createURI(inputLocation), Arrays.asList(URI.createURI(sourcemmLocation)));
@@ -202,6 +206,7 @@ public class RecordBuilder  {
 
 			BufferedWriter bufWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
 
+			int count = 0;
 			for (Iterator<EObject> it = inputResource.getAllContents(); it.hasNext();) {
 				EObject currentObj = it.next();
 				bufWriter.append("<");
@@ -209,7 +214,9 @@ public class RecordBuilder  {
 				bufWriter.append(",");
 				bufWriter.append(currentObj.eClass().getName());
 				bufWriter.append(">\n");
+				count++;
 			}
+			LOGGER.info("Built {} records from {}", count, inputResource.getURI());
 
 			bufWriter.close();
 		}

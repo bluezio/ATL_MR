@@ -23,13 +23,13 @@ import org.eclipse.m2m.atl.emftvm.trace.TraceLinkSet;
 import org.eclipse.m2m.atl.emftvm.trace.TracedRule;
 
 import uk.ac.york.mondo.integration.hawk.emf.HawkModelDescriptor;
-import uk.ac.york.mondo.integration.hawk.emf.HawkResourceFactoryImpl;
-import uk.ac.york.mondo.integration.hawk.emf.HawkResourceImpl;
+import uk.ac.york.mondo.integration.hawk.emf.impl.HawkResourceFactoryImpl;
+import uk.ac.york.mondo.integration.hawk.emf.impl.HawkResourceImpl;
 
 
 public class ATLMRUtils {
 
-	private static final class HadoopHawkResourceFactoryImpl extends HawkResourceFactoryImpl {
+	public static final class HadoopHawkResourceFactoryImpl extends HawkResourceFactoryImpl {
 		private final Configuration conf;
 
 		private HadoopHawkResourceFactoryImpl(Configuration conf) {
@@ -37,7 +37,7 @@ public class ATLMRUtils {
 		}
 
 		@Override
-		public Resource createResource(URI uri) {
+		public HawkResourceImpl createResource(URI uri) {
 			if (isHawkURL(uri)) {
 				final HawkModelDescriptor descriptor = parseHawkURL(uri);
 				return new HadoopHawkResourceImpl(uri, descriptor, conf);
@@ -53,6 +53,7 @@ public class ATLMRUtils {
 		private HadoopHawkResourceImpl(URI uri, HawkModelDescriptor descriptor, Configuration conf) {
 			super(uri, descriptor);
 			this.conf = conf;
+			descriptor.setSplit(false);
 		}
 
 		public HadoopHawkResourceImpl(URI uri, Configuration conf) {

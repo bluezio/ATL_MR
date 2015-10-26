@@ -24,7 +24,7 @@
 
 	<target name="dist.emftvm" depends="check.emftvm" unless="${emftvm.exists}">
 		<!-- allowbinarycycles="true" is needed due to a cycle between org.slf4j.api and ch.qos.logback.classic through ch.qos.logback.slf4j -->
-		<pde.exportPlugins allowbinarycycles="true" destination="${dist.libs.atlmr}" exportSource="false" exportType="directory" plugins="org.eclipse.m2m.atl.emftvm,org.eclipse.m2m.atl.emftvm.trace,uk.ac.york.mondo.integration.hawk.emf,uk.ac.york.mondo.integration.api,uk.ac.york.mondo.integration.artemis" useJARFormat="true" qualifier="atlmr" />
+		<pde.exportPlugins allowbinarycycles="true" destination="${dist.libs.atlmr}" exportSource="false" exportType="directory" plugins="org.eclipse.m2m.atl.emftvm,org.eclipse.m2m.atl.emftvm.trace,uk.ac.york.mondo.integration.hawk.emf,uk.ac.york.mondo.integration.api,uk.ac.york.mondo.integration.artemis,org.hawk.emfresource,org.hawk.core,org.hawk.graph" useJARFormat="true" qualifier="atlmr" />
 	</target>
 
 	<target name="dist">
