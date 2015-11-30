@@ -83,6 +83,7 @@ public class RecordBuilder  {
 					Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("xmi", new XMIResourceFactoryImpl());
 					Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("hawkmodel", new UnsplitHawkResourceFactoryImpl());
 					Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put("hawk+http", new UnsplitHawkResourceFactoryImpl());
+					Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put("hawk+https", new UnsplitHawkResourceFactoryImpl());
 
 					// Build records file
 					Builder recordBuilder = new Builder(URI.createURI(inputLocation), Arrays.asList(URI.createURI(sourcemmLocation)));
